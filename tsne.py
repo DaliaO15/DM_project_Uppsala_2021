@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import numpy as np
 
+def m(t):
+    """Momentum"""
+    return 0.5 if t < 250 else 0.8
+
 def pairwise_distances(X):
     return np.sum((X[None, :] - X[:, None])**2, 2)
 
@@ -69,7 +73,7 @@ def gradient(P, Q, y):
     #     dY[i, :] = np.sum(np.tile(pq_diff[:, i] * aux[:, i], (no_dims, 1)).T * (y[i, :] - y), 0)
     # return dY
 
-def tsne(X, ydim=2, T=1000, l=500, m=0.9, perp=30):
+def tsne(X, ydim=2, T=1000, l=500, perp=30):
     N = X.shape[0]
     P = p_joint(X, perp)
 
@@ -80,7 +84,7 @@ def tsne(X, ydim=2, T=1000, l=500, m=0.9, perp=30):
     for t in range(T):
         Q = q_joint(Y[-1])
         grad = gradient(P, Q, Y[-1])
-        y = Y[-1] - l*grad + m*(Y[-1] - Y[-2])
+        y = Y[-1] - l*grad + m(t)*(Y[-1] - Y[-2])
         Y.append(y)
 
         if t % 10 == 0:
