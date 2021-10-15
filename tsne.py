@@ -82,7 +82,7 @@ def tsne(X, ydim=2, T=1000, l=500, perp=30, verbose=True):
 
     Y = []
     y = np.random.normal(loc=0.0, scale=1e-4, size=(N,ydim))
-    Y.append(y); Y.append(y)
+    Y.append(y);  Y.append(y)
 
     for t in range(T):
         Q = q_joint(Y[-1])
