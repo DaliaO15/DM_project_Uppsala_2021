@@ -46,11 +46,14 @@ def find_sigmas(dists, perplexity):
         found_sigmas[i] = search(func, perplexity)
     return found_sigmas
 
-def p_joint(X, perp):
+def p_joint(X, perp, verbose):
     N = X.shape[0]
     dists = pairwise_distances(X)
     sigmas = find_sigmas(dists, perp)
-    print('Sigmas:', sigmas)
+
+    if(verbose):
+        print('Sigmas:', sigmas)
+
     p_cond = p_conditional(dists, sigmas)
     return (p_cond + p_cond.T) / (2. * N)
 
@@ -73,9 +76,9 @@ def gradient(P, Q, y):
     #     dY[i, :] = np.sum(np.tile(pq_diff[:, i] * aux[:, i], (no_dims, 1)).T * (y[i, :] - y), 0)
     # return dY
 
-def tsne(X, ydim=2, T=1000, l=500, perp=30):
+def tsne(X, ydim=2, T=1000, l=500, perp=30, verbose=True):
     N = X.shape[0]
-    P = p_joint(X, perp)
+    P = p_joint(X, perp, verbose)
 
     Y = []
     y = np.random.normal(loc=0.0, scale=1e-4, size=(N,ydim))
@@ -89,5 +92,8 @@ def tsne(X, ydim=2, T=1000, l=500, perp=30):
 
         if t % 10 == 0:
             Q = np.maximum(Q, 1e-12)
-            print(f"Iteration {t+1}: error {round(np.sum(P * np.log(P/Q)), 4)}")
+
+            if(verbose):
+                print(f"Iteration {t+1}: error {round(np.sum(P * np.log(P/Q)), 4)}")
+
     return y
