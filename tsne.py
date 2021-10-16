@@ -37,7 +37,6 @@ def p_conditional(dists, sigmas):
     e += 1e-8
     return e / e.sum(axis=1).reshape([-1,1])
     
-
 def find_sigmas(dists, perplexity):
     """Find sigmas that give the desired perplexity"""
     found_sigmas = np.zeros(dists.shape[0])
@@ -50,7 +49,7 @@ def p_joint(X, perp):
     N = X.shape[0]
     dists = pairwise_distances(X)
     sigmas = find_sigmas(dists, perp)
-    print('Sigmas:', sigmas)
+    # print('Sigmas:', sigmas)
     p_cond = p_conditional(dists, sigmas)
     return (p_cond + p_cond.T) / (2. * N)
 
@@ -87,7 +86,7 @@ def tsne(X, ydim=2, T=1000, l=500, perp=30):
         y = Y[-1] - l*grad + m(t)*(Y[-1] - Y[-2])
         Y.append(y)
 
-        if t % 10 == 0:
-            Q = np.maximum(Q, 1e-12)
-            print(f"Iteration {t+1}: error {round(np.sum(P * np.log(P/Q)), 4)}")
+        # if t % 10 == 0:
+        #     Q = np.maximum(Q, 1e-12)
+        #     print(f"Iteration {t+1}: error {round(np.sum(P * np.log(P/Q)), 4)}")
     return y
